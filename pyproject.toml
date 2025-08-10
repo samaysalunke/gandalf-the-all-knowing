@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-taste-server"
+version = "2.0.0"
+description = "Advanced taste-based content recommendation engine for Pooch AI implementing comprehensive prompt engineering framework"
+authors = [
+    {name = "Samay Salunke", email = "samay@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi==0.104.1",
+    "uvicorn[standard]==0.24.0", 
+    "python-dotenv==1.0.0",
+    "pydantic==2.5.0",
+    "typing-extensions==4.8.0",
+    "python-multipart==0.0.6",
+    "httpx==0.25.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.24.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0"
+]
+
+[tool.setuptools]
+packages = ["mcp_taste_server"]
+
+[tool.setuptools.package-dir]
+"mcp_taste_server" = "."
+
+[project.urls]
+Homepage = "https://github.com/samaysalunke/mcp-taste-server"
+Documentation = "https://github.com/samaysalunke/mcp-taste-server#readme"
+Repository = "https://github.com/samaysalunke/mcp-taste-server.git"
+"Bug Tracker" = "https://github.com/samaysalunke/mcp-taste-server/issues"
+
+[project.scripts]
+mcp-taste-server = "mcp_starter:main"

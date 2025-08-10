@@ -1,0 +1,15 @@
+# Authentication token for MCP server
+AUTH_TOKEN=your_secret_token_here
+
+# Your phone number in format: {country_code}{number}
+# Example: 919876543210 for India (+91) 9876543210
+MY_NUMBER=919876543210
+
+# Server port
+PORT=8086
+
+# Optional: Development settings
+DEBUG=true
+
+# MCP Protocol Version
+MCP_PROTOCOL_VERSION=2025-06-18
