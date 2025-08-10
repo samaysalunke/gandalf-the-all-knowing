@@ -215,13 +215,20 @@ def validate_origin(request: Request):
 
 # Tool execution functions implementing the advanced framework
 def execute_validate() -> Dict[str, Any]:
-    """Execute the validate tool - returns phone number for Pooch validation"""
+    """Execute the validate tool - returns phone number for Puch validation
+    
+    According to Puch AI docs (https://puch.ai/mcp), the validate tool must return 
+    the phone number in {country_code}{number} format. The MCP protocol requires
+    a content field with the phone number.
+    """
     return {
-        "phone_number": MY_NUMBER,
-        "status": "validated",
-        "server_version": "2.0.0",
-        "mcp_protocol_version": MCP_PROTOCOL_VERSION,
-        "timestamp": datetime.now().isoformat()
+        "content": [
+            {
+                "type": "text",
+                "text": MY_NUMBER  # Phone number as text content
+            }
+        ],
+        "isError": False
     }
 
 def execute_get_taste_recommendations(
@@ -263,25 +270,45 @@ def execute_get_taste_recommendations(
         )
         
         # Build comprehensive response
-        return {
+        result_data = {
             "success": True,
             "recommendations": [rec.dict() for rec in recommendations],
-            "formatted_response": formatted_response,
             "taste_profile": profile.dict(),
             "total_recommendations": len(recommendations),
             "analysis_timestamp": datetime.now().isoformat(),
             "framework_version": "2.0.0"
         }
         
+        return {
+            "content": [
+                {
+                    "type": "text",
+                    "text": formatted_response
+                }
+            ],
+            "isError": False,
+            "_meta": result_data
+        }
+        
     except Exception as e:
         error_msg = f"Failed to generate recommendations: {str(e)}"
+        error_response = ("Sorry, I encountered an error while analyzing your taste preferences. "
+                         "Could you try rephrasing your request or provide more details about what you're looking for?")
+        
         return {
-            "success": False,
-            "error": error_msg,
-            "recommendations": [],
-            "formatted_response": ("Sorry, I encountered an error while analyzing your taste preferences. "
-                                 "Could you try rephrasing your request or provide more details about what you're looking for?"),
-            "taste_profile": None
+            "content": [
+                {
+                    "type": "text", 
+                    "text": error_response
+                }
+            ],
+            "isError": True,
+            "_meta": {
+                "success": False,
+                "error": error_msg,
+                "recommendations": [],
+                "taste_profile": None
+            }
         }
 
 def execute_extract_taste_profile(user_input: str, content_type: str = "mixed") -> Dict[str, Any]:
@@ -329,7 +356,7 @@ def execute_extract_taste_profile(user_input: str, content_type: str = "mixed") 
                 len(profile.audio_style.production_values)
             )
         
-        return {
+        result_data = {
             "success": True,
             "taste_profile": profile.dict(),
             "analysis": analysis,
@@ -337,11 +364,34 @@ def execute_extract_taste_profile(user_input: str, content_type: str = "mixed") 
             "timestamp": datetime.now().isoformat()
         }
         
-    except Exception as e:
+        extraction_summary = f"Taste profile extracted successfully. Found {sum(analysis.values())} taste elements. Quality: {result_data['extraction_quality']}"
+        
         return {
-            "success": False,
-            "error": f"Failed to extract taste profile: {str(e)}",
-            "taste_profile": None
+            "content": [
+                {
+                    "type": "text",
+                    "text": extraction_summary
+                }
+            ],
+            "isError": False,
+            "_meta": result_data
+        }
+        
+    except Exception as e:
+        error_msg = f"Failed to extract taste profile: {str(e)}"
+        return {
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Sorry, I couldn't analyze your taste profile. Please try again with more details."
+                }
+            ],
+            "isError": True,
+            "_meta": {
+                "success": False,
+                "error": error_msg,
+                "taste_profile": None
+            }
         }
 
 def execute_handle_contextual_request(user_input: str, request_type: str) -> Dict[str, Any]:
@@ -352,18 +402,39 @@ def execute_handle_contextual_request(user_input: str, request_type: str) -> Dic
             request_type=request_type
         )
         
-        return {
+        result_data = {
             "success": True,
-            "response": response,
             "request_type": request_type,
             "timestamp": datetime.now().isoformat()
         }
         
-    except Exception as e:
         return {
-            "success": False,
-            "error": f"Failed to handle contextual request: {str(e)}",
-            "response": "I can help you find content recommendations. Could you tell me more about what you're looking for?"
+            "content": [
+                {
+                    "type": "text",
+                    "text": response
+                }
+            ],
+            "isError": False,
+            "_meta": result_data
+        }
+        
+    except Exception as e:
+        error_msg = f"Failed to handle contextual request: {str(e)}"
+        fallback_response = "I can help you find content recommendations. Could you tell me more about what you're looking for?"
+        
+        return {
+            "content": [
+                {
+                    "type": "text",
+                    "text": fallback_response
+                }
+            ],
+            "isError": True,
+            "_meta": {
+                "success": False,
+                "error": error_msg
+            }
         }
 
 # MCP Protocol handlers
@@ -402,6 +473,7 @@ def handle_tools_call(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, An
     """Handle MCP tools/call method with comprehensive error handling"""
     try:
         if tool_name == "validate":
+            # Puch AI expects validate tool to return phone number  
             return execute_validate()
             
         elif tool_name == "get_taste_recommendations":
