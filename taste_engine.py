@@ -969,11 +969,18 @@ class MasterTasteInterpreter:
         # Filter content by type if specified
         relevant_content = {}
         for content_id, content in self.enhanced_content_db.items():
-            if profile.content_type == "mixed" or content["content_type"] == profile.content_type:
+            if profile.content_type == "mixed":
+                relevant_content[content_id] = content
+            elif profile.content_type == "tv" and content["content_type"] == "tv_show":
+                relevant_content[content_id] = content
+            elif profile.content_type == content["content_type"]:
+                relevant_content[content_id] = content
+            elif profile.content_type == "podcast" and content["content_type"] == "podcast":
                 relevant_content[content_id] = content
         
         if not relevant_content:
-            return recommendations
+            # Fallback to mixed content if no specific matches
+            relevant_content = self.enhanced_content_db
         
         # Evaluate all relevant content
         scored_content = []

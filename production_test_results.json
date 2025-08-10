@@ -1,0 +1,184 @@
+{
+  "imports": {
+    "success": true,
+    "message": "All imports successful"
+  },
+  "taste_engine": [
+    {
+      "test": 1,
+      "input": "Something like The Office but not a sitcom...",
+      "profile_elements": 0,
+      "recommendations": 3,
+      "formatted_length": 1803,
+      "success": true
+    },
+    {
+      "test": 2,
+      "input": "I want something cozy and comforting for evening...",
+      "profile_elements": 1,
+      "recommendations": 3,
+      "formatted_length": 1803,
+      "success": true
+    },
+    {
+      "test": 3,
+      "input": "Give me something with smart dialogue and characte...",
+      "profile_elements": 2,
+      "recommendations": 3,
+      "formatted_length": 1824,
+      "success": true
+    },
+    {
+      "test": 4,
+      "input": "Something mysterious but not violent or scary...",
+      "profile_elements": 0,
+      "recommendations": 3,
+      "formatted_length": 1803,
+      "success": true
+    },
+    {
+      "test": 5,
+      "input": "A podcast with two hosts having casual conversatio...",
+      "profile_elements": 0,
+      "recommendations": 3,
+      "formatted_length": 1803,
+      "success": true
+    },
+    {
+      "test": 6,
+      "input": "Something that makes me think but isn't too heavy...",
+      "profile_elements": 0,
+      "recommendations": 3,
+      "formatted_length": 1803,
+      "success": true
+    }
+  ],
+  "mcp_protocol": [
+    {
+      "test": "initialize",
+      "success": true
+    },
+    {
+      "test": "tools/list",
+      "success": true,
+      "tools_count": 4
+    },
+    {
+      "test": "tools/call/validate",
+      "success": true
+    },
+    {
+      "test": "tools/call/get_taste_recommendations",
+      "success": true
+    },
+    {
+      "test": "tools/call/extract_taste_profile",
+      "success": true
+    },
+    {
+      "test": "tools/call/handle_contextual_request",
+      "success": true
+    }
+  ],
+  "recommendation_quality": [
+    {
+      "test": "quality_1",
+      "input": "Something like The Office but ...",
+      "quality_score": 100.0,
+      "checks": {
+        "success": true,
+        "has_recommendations": true,
+        "has_formatted_response": true,
+        "has_taste_profile": true,
+        "response_has_confidence": true
+      },
+      "success": true
+    },
+    {
+      "test": "quality_2",
+      "input": "I want something cozy for a ra...",
+      "quality_score": 100.0,
+      "checks": {
+        "success": true,
+        "has_recommendations": true,
+        "has_formatted_response": true,
+        "has_taste_profile": true,
+        "response_has_confidence": true
+      },
+      "success": true
+    },
+    {
+      "test": "quality_3",
+      "input": "Give me a smart podcast with g...",
+      "quality_score": 100.0,
+      "checks": {
+        "success": true,
+        "has_recommendations": true,
+        "has_formatted_response": true,
+        "has_taste_profile": true,
+        "response_has_confidence": true
+      },
+      "success": true
+    },
+    {
+      "test": "quality_4",
+      "input": "Something mysterious but not t...",
+      "quality_score": 100.0,
+      "checks": {
+        "success": true,
+        "has_recommendations": true,
+        "has_formatted_response": true,
+        "has_taste_profile": true,
+        "response_has_confidence": true
+      },
+      "success": true
+    }
+  ],
+  "edge_cases": [
+    {
+      "test": "empty_input",
+      "success": true,
+      "handled_gracefully": true
+    },
+    {
+      "test": "single_character",
+      "success": true,
+      "handled_gracefully": true
+    },
+    {
+      "test": "very_long_input",
+      "success": true,
+      "handled_gracefully": true
+    },
+    {
+      "test": "emoji_only",
+      "success": true,
+      "handled_gracefully": true
+    },
+    {
+      "test": "numbers_only",
+      "success": true,
+      "handled_gracefully": true
+    }
+  ],
+  "performance": [
+    {
+      "test": "performance_1",
+      "response_time_seconds": 0.0,
+      "success": true,
+      "meets_target": true
+    },
+    {
+      "test": "performance_2",
+      "response_time_seconds": 0.0,
+      "success": true,
+      "meets_target": true
+    },
+    {
+      "test": "performance_3",
+      "response_time_seconds": 0.0,
+      "success": true,
+      "meets_target": true
+    }
+  ]
+}
