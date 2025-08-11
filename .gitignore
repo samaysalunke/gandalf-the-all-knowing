@@ -63,3 +63,6 @@ ngrok
 # Temporary files
 *.tmp
 *.temp
+
+# Railway deployment
+.railway/
